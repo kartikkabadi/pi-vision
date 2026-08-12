@@ -1,0 +1,16 @@
+{
+  "name": "pi-vision",
+  "version": "0.1.0",
+  "description": "Automatic vision routing for the pi coding agent. Images attached to prompts or read by tools are described by a vision model of your choice, so any main model can work with screenshots and image files. Install with pi install.",
+  "keywords": ["pi-package", "pi-extension", "vision", "images", "screenshots"],
+  "license": "MIT",
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-tui": "*"
+  },
+  "pi": {
+    "extensions": ["./pi-vision.ts"]
+  }
+}
