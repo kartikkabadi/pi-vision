@@ -96,8 +96,10 @@ let configCache: VisionConfig | null = null;
 const descriptionCache = new Map<string, { text: string; usage?: Usage }>();
 const DESCRIPTION_CACHE_MAX = 16;
 
-function imageCacheKey(images: ImageContent[]): string {
+function imageCacheKey(images: ImageContent[], config: VisionConfig): string {
   const hash = createHash("sha1");
+  hash.update(JSON.stringify([config.provider, config.model, config.thinking]));
+  hash.update("\0");
   for (const image of images) {
     hash.update(image.mimeType);
     hash.update("\0");
@@ -188,9 +190,9 @@ async function describeImages(
   const combined = signal ? AbortSignal.any([signal, timeout]) : timeout;
 
   // Cache hit: the same image bytes were already described this session.
-  const cacheKey = imageCacheKey(images);
+  const cacheKey = imageCacheKey(images, config);
   const cached = descriptionCache.get(cacheKey);
-  if (cached) return { ...cached };
+  if (cached) return { text: cached.text };
 
   // ctx.modelRegistry.complete resolves provider auth (stored credentials /
   // env keys) and delegates to the provider — the bare provider.streamSimple
