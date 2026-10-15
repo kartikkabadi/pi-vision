@@ -111,7 +111,10 @@ function getConfig(): VisionConfig {
   if (configCache) return configCache;
   let loaded: Partial<VisionConfig> = {};
   try {
-    loaded = JSON.parse(readFileSync(CONFIG_PATH, "utf8"));
+    const parsed: unknown = JSON.parse(readFileSync(CONFIG_PATH, "utf8"));
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      loaded = parsed as Partial<VisionConfig>;
+    }
   } catch {
     // no config file yet — defaults apply
   }
