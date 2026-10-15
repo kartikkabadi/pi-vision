@@ -53,6 +53,12 @@ try {
   const changedThinking = await events.get("tool_result")(image, ctx);
   assert.ok(changedThinking.content[0].text.includes("b/low"));
   assert.equal(calls, 3);
+  await command("model alternate/b", ctx);
+  const changedProvider = await events.get("tool_result")(image, ctx);
+  assert.ok(changedProvider.usage);
+  assert.equal(calls, 4, "changing only the provider triggers inference");
+  await events.get("tool_result")(image, ctx);
+  assert.equal(calls, 4, "the new provider has its own cached result");
   console.log("PASS cache respects model and thinking changes without replaying usage");
 } finally {
   rmSync(dir, { recursive: true, force: true });
